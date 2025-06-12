@@ -1,7 +1,7 @@
 <template>
 
   <v-app> 
-    <v-layout>
+    <v-layout v-if="route.name != 'Login'">
       <v-app-bar color="primary">
         <v-app-bar-nav-icon variant="text" @click.stop="drawer = !drawer">
           <v-icon>mdi-menu</v-icon>
@@ -22,7 +22,7 @@
             :to="item.to"
             @click="redirect(item.to)"
           >
-            <v-list-item-title class="text-primary"><v-icon class="me-4">{{ item.icon }}</v-icon>{{ item.title }}</v-list-item-title>
+            <v-list-item-title class="text-primary" v-if="item.title != 'Login'"><v-icon class="me-4">{{ item.icon }}</v-icon>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
@@ -35,6 +35,15 @@
         </router-view>
       </v-main>
 
+    </v-layout>
+    <v-layout v-else>
+          <v-main class="bg-blue-lighten-5 d-flex align-center "> 
+        <router-view v-slot="{ Component, route }">
+          <transition :name="route.meta.transition || 'fade'" mode="out-in">
+            <component :is="Component" />
+          </transition>
+        </router-view>
+      </v-main>
     </v-layout>
   </v-app>
 

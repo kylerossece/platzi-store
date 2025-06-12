@@ -187,7 +187,7 @@ export default {
           this.filteredTable = this.table.data.filter(item => {
         const user = this.getUserDetails(item.userId);
 
-        const name = `${user?.name?.firstname || ''} ${user?.name?.lastname}`.toLowerCase();
+        const name = `${user?.name?.firstname } ${user?.name?.lastname}`?.toLowerCase();
         const email= user?.email?.toLowerCase();
 
         return name.includes(val.toLowerCase()) ||  email.includes(val.toLowerCase());
