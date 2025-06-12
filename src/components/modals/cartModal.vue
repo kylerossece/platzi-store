@@ -24,21 +24,19 @@
                                 </v-col>
                            
                                 <v-row class="ma-0" v-for="(product, index) in form.products" :key="index">
-                                    <v-col cols="6">
-                                    <v-select
-                                    variant="underlined"
-                            
-                                    label="Product"
-                                    color="primary"
-                                    :item-title="products.title"
-                                    :item-value="(item) => item" 
-                                
-                                    :items="products"
-                                    v-model="product.productId"
-                                    :rules="rules.required"
-                                    ></v-select>
-                                </v-col>
-                                     <v-col cols="6" class="d-flex ga-2">
+                                    <v-col :cols="action === 'Add' ? 12 : 6">
+                                        <v-select
+                                        variant="underlined"
+                                        label="Product"
+                                        color="primary"
+                                        :items="products"             
+                                        item-title="title"          
+                                        item-value="id"             
+                                        v-model="product.productId"   
+                                        :rules="rules.required"
+                                        ></v-select>
+                                    </v-col>
+                                     <v-col v-if="action == 'Edit'" cols="6" class="d-flex ga-2">
                                       <v-text-field
                                     variant="underlined"
                                      color="primary"
@@ -133,10 +131,7 @@ export default {
         this.data = data
 
         this.form = {  
-        products: [{
-            productId: "",
-            quantity: 0,
-        }]
+        products: []
         }
         if(this.action == "Edit"){
              Object.keys(data)
@@ -155,8 +150,7 @@ export default {
       this.dialog = false;
     },
     addProduct(){
-        this.form.products.push({ productId: "",
-            quantity: 0,})
+        this.form.products.push({ product: null, quantity: 1 });
     },
     removeProduct(index){
         this.form.products.splice(index,1)
