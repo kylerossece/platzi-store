@@ -8,8 +8,23 @@
         </v-app-bar-nav-icon>
 
         <v-toolbar-title>{{ route.name }}</v-toolbar-title>
+              <v-menu>
+      <template v-slot:activator="{ props }">
+        <v-btn
+          class="text-white"
+          v-bind="props"
+        >
+          <v-icon class="mr-2">mdi-account</v-icon> Profile
+        </v-btn>
+      </template>
+      <v-list>
+        <v-list-item class="cursor-pointer">
+          <v-list-item-title @click="logout">Logout</v-list-item-title>
+        </v-list-item>
+      </v-list>
+    </v-menu>
       </v-app-bar>
-
+    
       <v-navigation-drawer
         v-model="drawer"
         :location="$vuetify.display.mobile ? 'top' : undefined"
@@ -52,10 +67,13 @@
 <script setup>
 
 import { ref } from 'vue'
-import { useRoute } from 'vue-router'
+import { useAccount } from './store/account'
+import { useRoute, useRouter } from 'vue-router'
 import routes from "./router/routes"
 const drawer = ref(false)
 const route = useRoute()
+const router = useRouter();
+const accountStore = useAccount();
 const items = routes.map(route => ({
   title: route.name,
   to: route.path,
@@ -66,5 +84,10 @@ const items = routes.map(route => ({
 const redirect = (route) => {
   window.open(route, "_self")
 }
+
+const logout = () => {
+  accountStore.logout();    
+  router.push('/login');   
+};
 </script>
 
