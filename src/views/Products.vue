@@ -40,7 +40,7 @@
               <v-card  class="d-flex flex-column" height="100%" width="100%">
                 <v-card-title class="text-body-2 d-flex justify-between align-center bg-primary rounded-t-lg">
                 <span class="text-truncate" style="max-width: 80%;">{{item.title}}</span>
-                <v-icon @click="handleProduct(item, 'delete')" class="text-white ml-auto cursor-pointer">mdi-close</v-icon>
+                <v-icon @click="handleProduct(item, 'Delete')" class="text-white ml-auto cursor-pointer">mdi-close</v-icon>
                 </v-card-title>
                     <v-divider></v-divider>
                     <v-img class="mb-5 mt-5"  height="125" :src="item.image">
@@ -48,18 +48,24 @@
                        <v-divider></v-divider>
                     <v-card-text>{{item.description}}</v-card-text>
                           <v-divider></v-divider>
-                             <v-card-text class="d-flex flex-column ga-3">
-                                        <span>Price: ${{item.price}}</span>
-                                        <span>Stock: {{item.rating?.count}}</span>
-                                        <span v-if="item.rating" class="d-flex align-center">
-                                        Rating: 
+                          <v-card-text>
+                            <p>
+                                Price: ${{item.price}}
+                            </p>
+                            <p>
+                                    Stock: {{item.rating?.count}}
+                            </p>
+                            <p v-if="item.rating" class="d-flex align-center">
+                                   Rating: 
                                          <v-rating
                                         size="x-small"
                                         v-model="item.rating.rate"
                                         readonly
                                         ></v-rating>
-                                        </span>
-                             </v-card-text>
+                            </p>
+                        
+                            </v-card-text>
+                           <p class="mr-4 pb-4 text-primary text-body-1 cursor-pointer text-decoration-underline text-end" @click="handleProduct(item, 'Edit')">[Edit]</p>
                  
                     </v-card>
             </v-col>
@@ -70,7 +76,7 @@
       </v-card>
         </v-col>
     </v-row>
-    <ProductsModal ref="modal" />
+    <ProductsModal :products="products" ref="modal" />
   </v-container>
 </template>
 
@@ -99,7 +105,7 @@ export default {
             },
        
             handleProduct(data,action){
-                this.$refs.modal.open(data, action).then(result => {
+                this.$refs.modal.open(data, action).then((result) => {
                     if(result){
                         this.getList();
                     }
