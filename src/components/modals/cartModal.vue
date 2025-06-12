@@ -22,9 +22,20 @@
                                 <v-col cols="12" class="d-flex justify-end mb-4">
                                          <v-btn @click="addProduct" color="primary"><v-icon class="mr-2">mdi-plus</v-icon>Add Product</v-btn>
                                 </v-col>
-                           
+                                 <v-col cols="12" class="d-flex justify-end mb-4">
+                                        <v-select
+                                        variant="underlined"
+                                        label="User"
+                                        color="primary"
+                                        :items="users"             
+                                        :item-title="(item) => `${capitalize(item.name?.firstname)} ${capitalize(item.name?.lastname)}`"          
+                                        :item-value="(item) => item.id"             
+                                        v-model="form.userId"   
+                                        :rules="rules.required"
+                                        ></v-select>
+                                </v-col>
                                 <v-row class="ma-0" v-for="(product, index) in form.products" :key="index">
-                                    <v-col :cols="action === 'Add' ? 12 : 6">
+                                    <v-col cols="12" md="6" lg="8">
                                         <v-select
                                         variant="underlined"
                                         label="Product"
@@ -36,7 +47,7 @@
                                         :rules="rules.required"
                                         ></v-select>
                                     </v-col>
-                                     <v-col v-if="action == 'Edit'" cols="6" class="d-flex ga-2">
+                                     <v-col  cols="12" md="6" lg="4" class="d-flex ga-2">
                                       <v-text-field
                                     variant="underlined"
                                      color="primary"
@@ -89,6 +100,7 @@
 
 <script>
 import Snackbar from "../Snackbar.vue"
+import methods from "../../mixins/methods"
 export default {
     data(){
         return {
@@ -107,6 +119,7 @@ export default {
       },
         }
     },
+    mixins: [methods],
     props: {
         products: {
             type: Array,
@@ -131,7 +144,10 @@ export default {
         this.data = data
 
         this.form = {  
-        products: []
+        userId: null,
+        products: [
+            { product: null, quantity: 0 }
+        ]
         }
         if(this.action == "Edit"){
              Object.keys(data)
@@ -150,14 +166,28 @@ export default {
       this.dialog = false;
     },
     addProduct(){
-        this.form.products.push({ product: null, quantity: 1 });
+        this.form.products.push({ product: null, quantity: 0 });
     },
     removeProduct(index){
         this.form.products.splice(index,1)
     },
     AddCart(){
         this.loading = true;
-        this.$api.post("/carts", this.form).then((response) => {
+        const products = this.form.products.map(item => {
+   
+        const product = this.products.find(product => product.id === item.productId);
+        return {
+            ...product,  
+            quantity: item.quantity 
+        };
+    });
+
+        const payload = {
+            userId: this.form.userId,
+            products: [...products]
+        }
+
+        this.$api.post("/carts", payload).then((response) => {
             const {data} = response 
             if(Object.keys(data)?.length){
                 this.$refs.snack.open("Successfully Added Cart", "success")
@@ -178,8 +208,21 @@ export default {
      EditCart(){
         this.loading = true;
      
+          const products = this.form.products.map(item => {
+   
+                const product = this.products.find(product => product.id === item.productId);
+                return {
+                    ...product,  
+                    quantity: item.quantity 
+                };
+            });
 
-        this.$api.put(`/carts/${this.data.id}`, this.form).then((response) => {
+                const payload = {
+                    userId: this.form.userId,
+                    products: [...products]
+                }
+
+        this.$api.put(`/carts/${this.data.id}`, payload).then((response) => {
             const {data} = response 
             if(Object.keys(data)?.length){
                 this.$refs.snack.open("Successfully Edited Cart", "success")
