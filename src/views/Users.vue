@@ -43,7 +43,7 @@
               loading-text="Loading... Please wait"
               class="elevation-1"
             >
-                <template v-slot:[`item.name`]="{ item }">
+                <template v-slot:[`item.name.firstname`]="{ item }">
                 <div>{{ capitalize(item.name?.firstname) + " " + capitalize(item.name.lastname)}}</div>
               </template>
 
@@ -87,7 +87,7 @@ export default {
                 headers: [
                 {
                     title: "Name",
-                    key: "name",
+                    key: "name.firstname",
                 },
                 {
                     title: "Email", 

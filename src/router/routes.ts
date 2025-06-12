@@ -9,7 +9,7 @@ export default  [
   },
   {
     path: "/cart",
-    name: "Cart",
+    name: "Carts",
     icon: "mdi-cart-outline",
     component: () => import("../views/Cart.vue"),
     meta: { transition: "slide-left" },

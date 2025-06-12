@@ -47,12 +47,17 @@
                 <template v-slot:[`item.date`]="{ item }">
                 <div>{{ dateFormatter(item.date)}}</div>
               </template>
-                <template v-slot:[`item.user`]="{ item }">
+                <template v-slot:[`item.userId`]="{ item }">
                 <div>{{capitalize(this.getUserDetails(item.userId)?.name?.firstname)}} 
                     {{capitalize(this.getUserDetails(item.userId)?.name?.lastname)}}</div>
               </template>
                 <template v-slot:[`item.email`]="{ item }">
                 <div>{{this.getUserDetails(item.userId)?.email}} 
+                </div>
+              </template>
+               <template v-slot:[`item.products`]="{ item }">
+                <div v-for="(product, index) in item.products" :key="index">
+                    {{this.getProductDetails(product.productId)}} (Quantity : {{product.quantity}})
                 </div>
               </template>
 
@@ -77,12 +82,12 @@
       </v-card>
         </v-col>
     </v-row>
-    <CategoryModal  ref="modal" />
+    <CartModal :products="products" :users="users" ref="modal" />
   </v-container>
 </template>
 
 <script>
-import CategoryModal from '../components/modals/categoryModal.vue'
+import CartModal from '../components/modals/cartModal.vue'
 import methods from "../mixins/methods"
 export default {
     mixins: [methods],
@@ -99,7 +104,7 @@ export default {
             
                 {
                     title: "Name", 
-                    key: "user" ,
+                    key: "userId" ,
 
                 },
                   {
@@ -124,7 +129,7 @@ export default {
         }
     },
     components: {
-       CategoryModal
+       CartModal
         },
         methods: {
             getList(){
@@ -150,9 +155,6 @@ export default {
                     console.error(error)
                 })
             },
-            getUserDetails(userId){
-                return this.users.find(user => user.id === userId);
-            },
             getProducts(){
                 this.table.loading = true;
                 this.$api.get("/products").then((response) => {
@@ -161,6 +163,12 @@ export default {
                 }).catch((error) => {
                     console.error(error)
                 })
+            },
+            getUserDetails(userId){
+                return this.users.find(user => user.id === userId);
+            },
+            getProductDetails(productId){
+                return this.products.find(product => product.id === productId)?.title;
             },
        
             handleCarts(data,action){

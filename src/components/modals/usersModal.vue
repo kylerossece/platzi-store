@@ -101,23 +101,9 @@ export default {
       },
         }
     },
-    props: {
-        products: {
-            type: Array,
-            default: () => {
-                return []
-            }
-        }
-    },
+
     components: {Snackbar},
-    computed: {
-        category(){
-            const category = this.products.length ? this.products.map((item) => {
-               return item.category
-            }) : []
-            return [...new Set(category)]
-        }
-    },
+
     methods:{
         open(data = {}, action = "Add"){
         this.dialog = true;

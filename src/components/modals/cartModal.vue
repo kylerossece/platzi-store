@@ -6,7 +6,7 @@
                 <v-form ref="form" lazy-validation>
                        <v-card-title class="d-flex justify-space-between align-center">
                 <div >
-                    {{action}} Product
+                    {{action}} Cart
                 </div>
 
                 <v-btn
@@ -17,62 +17,52 @@
               </v-card-title>
                     <v-card-text>
                         <v-container v-if="this.action != 'Delete'">
+                            
                             <v-row >
-                                <v-col cols="12" >
-                                    <v-text-field
-                                    variant="underlined"
-                                       color="primary"
-                                    label="Title"
-                                    v-model="form.title"
-                                    :rules="rules.required"
-                                    ></v-text-field>
+                                <v-col cols="12" class="d-flex justify-end mb-4">
+                                         <v-btn @click="addProduct" color="primary"><v-icon class="mr-2">mdi-plus</v-icon>Add Product</v-btn>
                                 </v-col>
-                                    <v-col cols="12" >
-                                    <v-text-field
-                                    variant="underlined"
-                                   color="primary"
-                                    type="number"
-                                    label="Price"
-                                    v-model="form.price"
-                                    :rules="rules.required"
-                                    ></v-text-field>
-                                </v-col>
-                                    <v-col cols="12">
-                                    <v-text-field
-                                    variant="underlined"
-                                           color="primary"
-                                    label="Description"
-                                    v-model="form.description"
-                                    :rules="rules.required"
-                                    ></v-text-field>
-                                </v-col>
-                                    <v-col cols="12">
+                           
+                                <v-row class="ma-0" v-for="(product, index) in form.products" :key="index">
+                                    <v-col cols="6">
                                     <v-select
                                     variant="underlined"
                             
-                                    label="Category"
-                           
-                                           color="primary"
+                                    label="Product"
+                                    color="primary"
+                                    :item-title="products.title"
+                                    :item-value="products.id" 
                                 
-                                    :items="category"
-                                    v-model="form.category"
+                                    :items="products"
+                                    v-model="product.productId"
                                     :rules="rules.required"
                                     ></v-select>
                                 </v-col>
-                                   <v-col cols="12">
-                                           <v-text-field
+                                     <v-col cols="6" class="d-flex ga-2">
+                                      <v-text-field
                                     variant="underlined"
-                                       color="primary"
-                                    label="Image Link"
-                                    v-model="form.image"
+                                     color="primary"
+                                    type="number"
+                                    label="Quantity"
+                                    v-model="product.quantity"
                                     :rules="rules.required"
+
                                     ></v-text-field>
+                                       <v-btn
+                                    icon="mdi-close"
+                                    variant="text"
+                                    @click="removeProduct"
+                                    ></v-btn>
+                                    <div>
+
+                                    </div>
                                 </v-col>
+                                </v-row >
                             </v-row>
                            
                         </v-container>
                          <div class="text-body-1" v-else>
-                                Are you sure you want to delete this product?
+                                Are you sure you want to delete this cart?
                             </div>
                     </v-card-text>
                        <v-card-actions class="pb-3">
@@ -125,16 +115,16 @@ export default {
             default: () => {
                 return []
             }
+        },
+        users: {
+             type: Array,
+            default: () => {
+                return []
+            } 
         }
     },
     components: {Snackbar},
     computed: {
-        category(){
-            const category = this.products.length ? this.products.map((item) => {
-               return item.category
-            }) : []
-            return [...new Set(category)]
-        }
     },
     methods:{
         open(data = {}, action = "Add"){
@@ -143,12 +133,10 @@ export default {
         this.data = data
 
         this.form = {  
-        id: 0,
-        title: "",
-        price: "",
-        description: "",
-        category: "",
-        image: ""
+        products: [{
+            productId: "",
+            quantity: 0,
+        }]
         }
         if(this.action == "Edit"){
              Object.keys(data)
@@ -166,12 +154,19 @@ export default {
       this.resolve(false);
       this.dialog = false;
     },
-    AddProduct(){
+    addProduct(){
+        this.form.products.push({ productId: 0,
+            quantity: 0,})
+    },
+    removeProduct(index){
+        this.form.products.splice(index,1)
+    },
+    AddCart(){
         this.loading = true;
-        this.$api.post("/products", this.form).then((response) => {
+        this.$api.post("/carts", this.form).then((response) => {
             const {data} = response 
             if(Object.keys(data)?.length){
-                this.$refs.snack.open("Successfully Added Product", "success")
+                this.$refs.snack.open("Successfully Added Cart", "success")
                 if(this.timeout) clearTimeout(this.timeout);
 
                 this.timeout = setTimeout(() => {
@@ -185,14 +180,14 @@ export default {
 
         });
     },
-     EditProduct(){
+     EditCart(){
         this.loading = true;
      
 
-        this.$api.put(`/products/${this.data.id}`, this.form).then((response) => {
+        this.$api.put(`/carts/${this.data.id}`, this.form).then((response) => {
             const {data} = response 
             if(Object.keys(data)?.length){
-                this.$refs.snack.open("Successfully Edited Product", "success")
+                this.$refs.snack.open("Successfully Edited Cart", "success")
                 if(this.timeout) clearTimeout(this.timeout);
 
                 this.timeout = setTimeout(() => {
@@ -206,14 +201,14 @@ export default {
 
         });
     },
-        DeleteProduct(){
+        DeleteCart(){
         this.loading = true;
      
 
-        this.$api.delete(`/products/${this.data.id}`).then((response) => {
+        this.$api.delete(`/carts/${this.data.id}`).then((response) => {
             const {data} = response 
             if(Object.keys(data)?.length){
-                this.$refs.snack.open("Successfully Deleted Product", "success")
+                this.$refs.snack.open("Successfully Deleted Cart", "success")
                 if(this.timeout) clearTimeout(this.timeout);
 
                 this.timeout = setTimeout(() => {
@@ -231,11 +226,11 @@ export default {
          const { valid } = await this.$refs.form.validate();
          if (!valid) return;
         if(this.action === "Add"){
-            this.AddProduct()
+            this.AddCart()
         } else if(this.action === "Edit"){
-            this.EditProduct()
+            this.EditCart()
         } else if(this.action === "Delete"){
-            this.DeleteProduct()
+            this.DeleteCart()
         }
     }
     }
