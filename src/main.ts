@@ -4,6 +4,7 @@ import './style.css'
 import { createVuetify } from 'vuetify'
 import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
+import { aliases, mdi } from 'vuetify/iconsets/mdi' 
 import {API} from "./api/server-url"
 
 // @ts-ignore
@@ -13,11 +14,17 @@ import router from './router'
 import AOS from 'aos'
 import { createPinia } from "pinia";
 import piniaPersist from 'pinia-plugin-persistedstate'
+import '@mdi/font/css/materialdesignicons.css';
 import 'aos/dist/aos.css'
 
 const vuetify = createVuetify({
   components,
   directives,
+    icons: {   
+    defaultSet: 'mdi',  
+    aliases,
+    sets: { mdi }, 
+  },
 })
 
 AOS.init(); 
