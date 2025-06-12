@@ -24,19 +24,35 @@
 
       <v-spacer></v-spacer>
       <v-card-title>
-        <v-text-field
+        <v-row>
+          <v-col cols="12" md='6'>
+               <v-text-field
          v-model="search"
                 color="primary"
               append-inner-icon="mdi-magnify"
                     label="Search Product"
                     variant="underlined"
-    
+                  clearable
         ></v-text-field>
+          </v-col>
+              <v-col cols="12" md='6'>
+               <v-select
+                    v-model="sort"
+                    label="Sort by"
+                    variant="underlined"
+                    :item-title="(item) => item.title"
+                        :item-value="(item) => item.value" 
+                        :items="sortCategories"
+    
+        ></v-select>
+          </v-col>
+        </v-row>
+     
       </v-card-title>
             <v-spacer></v-spacer>
-            <v-card-text v-if="products.length">
-          <v-row >
-            <v-col data-aos="zoom-in"  class="d-flex" v-for="item in products" :key="item.id" cols="12" md="6" lg="4">
+            <v-card-text v-if="products.length && !loading">
+           <v-row >
+            <v-col data-aos="zoom-in"  class="d-flex" v-for="item in productsList" :key="item.id" cols="12" md="6" lg="4">
               <v-card  class="d-flex flex-column" height="100%" width="100%">
                 <v-card-title class="text-body-2 d-flex justify-between align-center bg-primary rounded-t-lg">
                 <span class="text-truncate" style="max-width: 80%;">{{item.title}}</span>
@@ -71,11 +87,27 @@
             </v-col>
 
           </v-row>
+        
           </v-card-text>
-           
+             <div class="text-center mb-4" v-else-if="loading">
+               <v-progress-circular
+              color="primary"
+              indeterminate
+            ></v-progress-circular>
+          </div>
       </v-card>
+          <v-pagination
+    v-model="page"
+    :length="pageCount"
+    :total-visible="5"
+    class="mt-4 d-flex justify-end"
+    color="primary"
+
+  ></v-pagination>
         </v-col>
+        
     </v-row>
+    
     <ProductsModal :products="products" ref="modal" />
   </v-container>
 </template>
@@ -86,21 +118,45 @@ export default {
     data(){
         return{
             search: '',
-            loading: true,
-            products: []
+            sort: '',
+            sortCategories:[
+              {title: "Name", value: "name"},
+              {title: "Rating", value: "rating"},
+              {title: "Quantity", value: "quantity"},
+              {title: "Price (High to Low)", value : "priceDescending"},
+              {title: "Price (Low to High)", value: "priceAscending"},
+              {title: "No Filter", value: null},
+            ],
+            loading: false,
+            products: [],
+            page: 1, 
+            itemsPerPage: 10, 
         }
     },
     components: {
         ProductsModal,
         },
+         computed: {
+        productsList() {
+        const pageStart = (this.page - 1) * this.itemsPerPage;
+        const pageEnd = pageStart + this.itemsPerPage;
+        return this.products.slice(pageStart, pageEnd);
+        },
+        pageCount() {
+          return Math.ceil(this.products.length / this.itemsPerPage);
+        },
+  },
         methods: {
             getList(){
+              this.loading = true;
                 this.$api.get("/products").then((response) => {
                     const {data} = response;
                     this.products =[...data];
 
                 }).catch((error) => {
                     console.error(error)
+                }).finally(() => {
+                  this.loading =false
                 })
             },
        
@@ -112,6 +168,41 @@ export default {
                 })
             }
         },
+        watch: {
+        page() {
+            window.scrollTo({
+              top: 0,
+              behavior: 'smooth' 
+            });
+          },
+        search(val){
+          console.log(val)
+           if (val) {
+          this.products = this.products.filter(item =>
+          item.title.toLowerCase().includes(val.toLowerCase())
+        );
+        } else {
+          this.getList();
+        }
+            },
+        sort(val){
+        if(val == "name") {
+          this.products.sort((a, b) => a.title.localeCompare(b.title));
+        } else if (val == "rating") {
+          this.products.sort((a, b) => b.rating?.rate - a.rating?.rate);
+        } else if (val == "quantity") {
+          this.products.sort((a, b) => b.rating?.count - a.rating?.count);
+        } else if (val == "priceDescending") {
+          this.products.sort((a, b) => b.price - a.price);
+        } else if (val == "priceAscending") {
+          this.products.sort((a, b) => a.price - b.price);
+        } else {
+          this.getList(); 
+        }
+      },
+       
+        },
+     
         created(){
             this.getList()
         }

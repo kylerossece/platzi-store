@@ -142,6 +142,7 @@ export default {
                 if(this.timeout) clearTimeout(this.timeout);
 
                 this.timeout = setTimeout(() => {
+                    this.resolve(true); 
                     this.dialog = false
                 }, 2500)
             }
@@ -163,6 +164,7 @@ export default {
                 if(this.timeout) clearTimeout(this.timeout);
 
                 this.timeout = setTimeout(() => {
+                     this.resolve(true); 
                     this.dialog = false
                 }, 2500)
             }
@@ -184,6 +186,7 @@ export default {
                 if(this.timeout) clearTimeout(this.timeout);
 
                 this.timeout = setTimeout(() => {
+                     this.resolve(true); 
                     this.dialog = false
                 }, 2500)
             }

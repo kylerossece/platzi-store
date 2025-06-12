@@ -31,7 +31,7 @@
                                     label="Product"
                                     color="primary"
                                     :item-title="products.title"
-                                    :item-value="products.id" 
+                                    :item-value="(item) => item" 
                                 
                                     :items="products"
                                     v-model="product.productId"
@@ -155,7 +155,7 @@ export default {
       this.dialog = false;
     },
     addProduct(){
-        this.form.products.push({ productId: 0,
+        this.form.products.push({ productId: "",
             quantity: 0,})
     },
     removeProduct(index){
@@ -170,6 +170,7 @@ export default {
                 if(this.timeout) clearTimeout(this.timeout);
 
                 this.timeout = setTimeout(() => {
+                     this.resolve(true); 
                     this.dialog = false
                 }, 2500)
             }
@@ -191,6 +192,7 @@ export default {
                 if(this.timeout) clearTimeout(this.timeout);
 
                 this.timeout = setTimeout(() => {
+                     this.resolve(true); 
                     this.dialog = false
                 }, 2500)
             }
@@ -212,6 +214,7 @@ export default {
                 if(this.timeout) clearTimeout(this.timeout);
 
                 this.timeout = setTimeout(() => {
+                     this.resolve(true); 
                     this.dialog = false
                 }, 2500)
             }

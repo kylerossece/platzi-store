@@ -51,7 +51,7 @@
                 <div>{{capitalize(this.getUserDetails(item.userId)?.name?.firstname)}} 
                     {{capitalize(this.getUserDetails(item.userId)?.name?.lastname)}}</div>
               </template>
-                <template v-slot:[`item.email`]="{ item }">
+                <template v-slot:[`item.id`]="{ item }">
                 <div>{{this.getUserDetails(item.userId)?.email}} 
                 </div>
               </template>
@@ -109,7 +109,7 @@ export default {
                 },
                   {
                     title: "Email", 
-                    key: "email" 
+                    key: "id" 
                 },
                   {
                     title: "Products", 

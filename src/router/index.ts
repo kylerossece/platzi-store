@@ -11,7 +11,6 @@ const router = createRouter({
 });
 
 router.afterEach((to) => {
-  console.log("to", to)
   document.title = (to.name as string) || 'Products Store';
 });
 
