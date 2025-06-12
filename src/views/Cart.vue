@@ -28,8 +28,9 @@
          v-model="search"
                 color="primary"
               append-inner-icon="mdi-magnify"
-                    label="Search Cart"
+                    label="Search by Name or Email"
                     variant="underlined"
+                    clearable
     
         ></v-text-field>
       </v-card-title>
@@ -37,7 +38,7 @@
                 <div class="pa-4">
             <v-data-table
               :headers="table.headers"
-              :items="table.data"
+              :items="filteredTable.length ? filteredTable : table.data"
               :items-per-page="10"
               :loading="table.loading"
               loading-text="Loading... Please wait"
@@ -97,6 +98,7 @@ export default {
             loading: true,
             users: [],
             products: [],
+            filteredTable: [],
             table: {
                 data: [],
                 loading: false,
@@ -178,6 +180,22 @@ export default {
                     }
                 })
             }
+        },
+            watch: {
+          search(val){
+        if (val) {
+          this.filteredTable = this.table.data.filter(item => {
+        const user = this.getUserDetails(item.userId);
+
+        const name = `${user?.name?.firstname || ''} ${user?.name?.lastname}`.toLowerCase();
+        const email= user?.email?.toLowerCase();
+
+        return name.includes(val.toLowerCase()) ||  email.includes(val.toLowerCase());
+      });
+        }  else {
+              this.filteredTable.splice(0,  this.filteredTable.length)
+            }
+          }
         },
         async created(){
             await this.getProducts();

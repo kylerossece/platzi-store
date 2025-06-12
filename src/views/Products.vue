@@ -3,8 +3,7 @@
     <v-row>
         <v-col cols="12">
              <v-card>
-                   <v-col cols="12">
-                
+                   <v-col cols="12">     
         <div class="d-flex align-center">
           <!-- <div class="text-left text-body-1">
               Products List
@@ -30,7 +29,7 @@
          v-model="search"
                 color="primary"
               append-inner-icon="mdi-magnify"
-                    label="Search Product"
+                    label="Search by Product Name"
                     variant="underlined"
                   clearable
         ></v-text-field>
@@ -41,13 +40,12 @@
                     label="Sort by"
                     variant="underlined"
                     :item-title="(item) => item.title"
-                        :item-value="(item) => item.value" 
-                        :items="sortCategories"
+                    :item-value="(item) => item.value" 
+                   :items="sortCategories"
     
         ></v-select>
           </v-col>
         </v-row>
-     
       </v-card-title>
             <v-spacer></v-spacer>
             <v-card-text v-if="products.length && !loading">
@@ -79,15 +77,11 @@
                                         readonly
                                         ></v-rating>
                             </p>
-                        
                             </v-card-text>
-                           <p class="mr-4 pb-4 text-primary text-body-1 cursor-pointer text-decoration-underline text-end" @click="handleProduct(item, 'Edit')">[Edit]</p>
-                 
+                           <p class="mr-4 pb-4 text-primary text-body-1 cursor-pointer text-decoration-underline text-end" @click="handleProduct(item, 'Edit')">[Edit]</p> 
                     </v-card>
             </v-col>
-
           </v-row>
-        
           </v-card-text>
              <div class="text-center mb-4" v-else-if="loading">
                <v-progress-circular

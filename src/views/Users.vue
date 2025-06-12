@@ -28,8 +28,9 @@
          v-model="search"
                 color="primary"
               append-inner-icon="mdi-magnify"
-                    label="Search User"
+                    label="Search by Name, Email, Mobile or Username"
                     variant="underlined"
+                    clearable
     
         ></v-text-field>
       </v-card-title>
@@ -37,7 +38,7 @@
                 <div class="pa-4">
             <v-data-table
               :headers="table.headers"
-              :items="table.data"
+              :items="filteredTable.length ? filteredTable : table.data"
               :items-per-page="10"
               :loading="table.loading"
               loading-text="Loading... Please wait"
@@ -81,6 +82,7 @@ export default {
         return{
             search: '',
             loading: true,
+            filteredTable: [],
             table: {
                 data: [],
                 loading: false,
@@ -134,6 +136,22 @@ export default {
                     }
                 })
             }
+        },
+        watch: {
+          search(val){
+                if (val) {
+             this.filteredTable = this.table.data.filter(item => {
+            return (
+              item.name?.firstname?.toLowerCase().includes(val.toLowerCase()) ||
+              item.email?.toLowerCase().includes(val.toLowerCase()) ||
+              item.phone?.toLowerCase().includes(val.toLowerCase()) ||
+              item.username?.toLowerCase().includes(val.toLowerCase())
+            );
+          });
+        }  else {
+              this.filteredTable.splice(0,  this.filteredTable.length)
+            }
+          }
         },
         created(){
             this.getList()
