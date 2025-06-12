@@ -7,6 +7,14 @@ export default  [
     meta: { transition: "slide-left" },
 
   },
+  {
+    path: "/cart",
+    name: "Cart",
+    icon: "mdi-cart-outline",
+    component: () => import("../views/Cart.vue"),
+    meta: { transition: "slide-left" },
+
+  },
     {
     path: "/users",
     name: "Users",
@@ -15,14 +23,7 @@ export default  [
     meta: { transition: "slide-left" },
 
   },
-      {
-    path: "/cart",
-    name: "Cart",
-    icon: "mdi-cart-outline",
-    component: () => import("../views/Cart.vue"),
-    meta: { transition: "slide-left" },
-
-  },
+      
  
  
 

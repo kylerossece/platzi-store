@@ -6,9 +6,9 @@
                    <v-col cols="12">
                 
         <div class="d-flex align-center">
-          <div class="text-left text-body-1">
+          <!-- <div class="text-left text-body-1">
               Products List
-          </div>
+          </div> -->
           <div class="ml-auto">
             <v-btn
                 elevated
