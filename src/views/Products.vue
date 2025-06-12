@@ -1,23 +1,19 @@
 <template>
    <v-container fluid>
     <v-row>
-      
-        
         <v-col cols="12">
-
              <v-card>
                    <v-col cols="12">
                 
         <div class="d-flex align-center">
           <div class="text-left text-body-1">
               Products List
-
           </div>
           <div class="ml-auto">
             <v-btn
                 elevated
               color="primary" 
-              @click="addProduct"      
+              @click="handleProduct"      
             >
               <v-icon class="mr-2">mdi-plus</v-icon> Add
             </v-btn>
@@ -30,13 +26,47 @@
       <v-card-title>
         <v-text-field
          v-model="search"
-             variant="underlined"
+                color="primary"
               append-inner-icon="mdi-magnify"
-                    label="Search Products"
-          single-line
-              hide-details
+                    label="Search Product"
+                    variant="underlined"
+    
         ></v-text-field>
       </v-card-title>
+            <v-spacer></v-spacer>
+            <v-card-text v-if="products.length">
+          <v-row >
+            <v-col data-aos="zoom-in"  class="d-flex" v-for="item in products" :key="item.id" cols="12" md="6" lg="4">
+              <v-card  class="d-flex flex-column" height="100%" width="100%">
+                <v-card-title class="text-body-2 d-flex justify-between align-center bg-primary rounded-t-lg">
+                <span class="text-truncate" style="max-width: 80%;">{{item.title}}</span>
+                <v-icon @click="handleProduct(item, 'delete')" class="text-white ml-auto cursor-pointer">mdi-close</v-icon>
+                </v-card-title>
+                    <v-divider></v-divider>
+                    <v-img class="mb-5 mt-5"  height="125" :src="item.image">
+                    </v-img>
+                       <v-divider></v-divider>
+                    <v-card-text>{{item.description}}</v-card-text>
+                          <v-divider></v-divider>
+                             <v-card-text class="d-flex flex-column ga-3">
+                                        <span>Price: ${{item.price}}</span>
+                                        <span>Stock: {{item.rating?.count}}</span>
+                                        <span v-if="item.rating" class="d-flex align-center">
+                                        Rating: 
+                                         <v-rating
+                                        size="x-small"
+                                        v-model="item.rating.rate"
+                                        readonly
+                                        ></v-rating>
+                                        </span>
+                             </v-card-text>
+                 
+                    </v-card>
+            </v-col>
+
+          </v-row>
+          </v-card-text>
+           
       </v-card>
         </v-col>
     </v-row>
@@ -50,15 +80,34 @@ export default {
     data(){
         return{
             search: '',
+            loading: true,
+            products: []
         }
     },
     components: {
         ProductsModal,
         },
         methods: {
-            addProduct(){
-                this.$refs.modal.open()
+            getList(){
+                this.$api.get("/products").then((response) => {
+                    const {data} = response;
+                    this.products =[...data];
+
+                }).catch((error) => {
+                    console.error(error)
+                })
+            },
+       
+            handleProduct(data,action){
+                this.$refs.modal.open(data, action).then(result => {
+                    if(result){
+                        this.getList();
+                    }
+                })
             }
+        },
+        created(){
+            this.getList()
         }
 }
 </script>

@@ -1,8 +1,6 @@
 import axios from "axios";
 
-
-
-const API_URL = `https://fakeapi.platzi.com`;
+const API_URL = `https://fakestoreapi.com`;
 
 export const API = axios.create({
   baseURL: API_URL,

@@ -10,4 +10,9 @@ const router = createRouter({
   routes: [...routes]
 });
 
+router.afterEach((to) => {
+  console.log("to", to)
+  document.title = (to.name as string) || 'Products Store';
+});
+
 export default router;

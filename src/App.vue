@@ -22,7 +22,7 @@
             :to="item.to"
             @click="redirect(item.to)"
           >
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+            <v-list-item-title class="text-primary"><v-icon class="me-4">{{ item.icon }}</v-icon>{{ item.title }}</v-list-item-title>
           </v-list-item>
         </v-list>
       </v-navigation-drawer>
@@ -50,6 +50,7 @@ const route = useRoute()
 const items = routes.map(route => ({
   title: route.name,
   to: route.path,
+  icon: route.icon,
   value: route.name,
 }))
 
