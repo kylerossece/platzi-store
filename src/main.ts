@@ -9,6 +9,7 @@ import {API} from "./api/server-url"
 
 // @ts-ignore
 import 'vuetify/styles'
+// @ts-ignore
 import App from './App.vue'
 import router from './router'
 import AOS from 'aos'

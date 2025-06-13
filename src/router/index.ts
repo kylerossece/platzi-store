@@ -13,9 +13,8 @@ const router = createRouter({
 
 router.beforeEach(async (routeTo, routeFrom, next) => {
   
-
   const store = useAccount();
-
+  console.log(routeFrom)
   const token = store.token
 
   const publicPages = ['/login'];
