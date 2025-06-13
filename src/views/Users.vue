@@ -143,6 +143,7 @@ export default {
              this.filteredTable = this.table.data.filter(item => {
             return (
               item.name?.firstname?.toLowerCase().includes(val.toLowerCase()) ||
+              item.name?.lastname?.toLowerCase().includes(val.toLowerCase()) ||
               item.email?.toLowerCase().includes(val.toLowerCase()) ||
               item.phone?.toLowerCase().includes(val.toLowerCase()) ||
               item.username?.toLowerCase().includes(val.toLowerCase())

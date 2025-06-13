@@ -14,7 +14,7 @@
           class="text-white"
           v-bind="props"
         >
-          <v-icon class="mr-2">mdi-account</v-icon> Profile
+          <v-icon class="mr-2">mdi-account</v-icon> {{ username ?? "" }}
         </v-btn>
       </template>
       <v-list>
@@ -68,18 +68,23 @@
 
 import { ref } from 'vue'
 import { useAccount } from './store/account'
+import { storeToRefs } from 'pinia';
 import { useRoute, useRouter } from 'vue-router'
 import routes from "./router/routes"
 const drawer = ref(false)
 const route = useRoute()
 const router = useRouter();
 const accountStore = useAccount();
+const { username } = storeToRefs(accountStore);
+
+
 const items = routes.map(route => ({
   title: route.name,
   to: route.path,
   icon: route.icon,
   value: route.name,
 }))
+
 
 const redirect = (route) => {
   window.open(route, "_self")

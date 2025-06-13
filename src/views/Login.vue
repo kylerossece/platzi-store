@@ -13,7 +13,7 @@
                     <v-col cols="12">
                           <v-text-field
                                     variant="underlined"
-                                           color="primary"
+                                    color="primary"
                                     label="Username"
                                     v-model="username"
                                     :rules="rules.required"
@@ -66,7 +66,7 @@ export default{
         password: "m38rmF$",
         showPassword: false,
         loading: false,
-          rules: {
+        rules: {
         required: [(value) => !!value || "Required."],
       },
     }),
@@ -86,17 +86,16 @@ export default{
               const {token} = response.data
          
               this.account.setToken(token);
+              this.account.setUsername(this.username);
               if(this.account.token){
                 this.$router.push("/")
               }
             }).catch((error) => {
-                      this.$refs.snack.open(error.message || error, 'red-darken-2')
+              this.$refs.snack.open(error.message || error, 'red-darken-2')
               console.error(error)
             }).finally(() => {
               this.loading = false;
             })
-
-            this
         }
     }
 }

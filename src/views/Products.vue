@@ -62,22 +62,27 @@
                        <v-divider></v-divider>
                     <v-card-text>{{item.description}}</v-card-text>
                           <v-divider></v-divider>
-                          <v-card-text>
-                            <p>
-                                Price: ${{item.price}}
-                            </p>
-                            <p>
-                                    Stock: {{item.rating?.count}}
-                            </p>
-                            <p v-if="item.rating" class="d-flex align-center">
-                                   Rating: 
-                                         <v-rating
-                                        size="x-small"
-                                        v-model="item.rating.rate"
-                                        readonly
-                                        ></v-rating>
-                            </p>
-                            </v-card-text>
+                         <v-card-text>
+                          <v-row>
+                            <v-col cols="12" class="pb-1">
+                              <p>Price: ${{ item.price }}</p>
+                            </v-col>
+                            <v-col cols="12" class="pb-1">
+                              <p>Stock: {{ item.rating?.count }}</p>
+                            </v-col>
+                            <v-col cols="12" v-if="item.rating" class="pt-2">
+                              <p class="d-flex align-center">
+                                Rating: 
+                                <v-rating
+                                  size="x-small"
+                                  v-model="item.rating.rate"
+                                  readonly
+                                  class="ml-2"
+                                ></v-rating>
+                              </p>
+                            </v-col>
+                          </v-row>
+                        </v-card-text>
                            <p class="mr-4 pb-4 text-primary text-body-1 cursor-pointer text-decoration-underline text-end" @click="handleProduct(item, 'Edit')">[Edit]</p> 
                     </v-card>
             </v-col>
@@ -123,6 +128,7 @@ export default {
             ],
             loading: false,
             products: [],
+            unfilteredProducts: [],
             page: 1, 
             itemsPerPage: 10, 
         }
@@ -145,6 +151,7 @@ export default {
               this.loading = true;
                 this.$api.get("/products").then((response) => {
                     const {data} = response;
+                    this.unfilteredProducts = [...data]
                     this.products =[...data];
 
                 }).catch((error) => {
@@ -172,12 +179,13 @@ export default {
         search(val){
           console.log(val)
            if (val) {
-          this.products = this.products.filter(item =>
+          this.products = this.unfilteredProducts.filter(item =>
           item.title.toLowerCase().includes(val.toLowerCase())
         );
         } else {
-          this.getList();
+          this.products = [...this.unfilteredProducts]
         }
+        this.page = 1; 
             },
         sort(val){
         if(val == "name") {
