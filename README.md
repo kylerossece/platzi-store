@@ -1,5 +1,31 @@
-# Vue 3 + TypeScript + Vite
+The website features a product store with CRUD operations for the user, cart, and product as well as user authentication. It utilizes the API from fakestoreapi. 
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+Key Features
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+Product Page
+
+* CRUD Operation
+* Product list includes description,rating and image
+* Search by product name and sorting
+
+Carts Page
+
+* CRUD Operation
+* Formatted Table Listing 
+* Search by User name or email
+
+Users Page
+* CRUD Operation
+* Formatted Table Listing
+* Search by User name, email, mobile or username.
+
+Login
+
+* Only created users can access the website
+* Logout
+
+Link: https://product-store-9pgb.vercel.app
+
+Login Credentials (already hardcoded)
+Username: johnd,
+Password: m38rmF$,
